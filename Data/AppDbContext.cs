@@ -34,46 +34,7 @@ namespace Data
         {
                      
             base.OnModelCreating(modelBuilder);
-
-            // Tworzenie użytkownika
-            //var user = new IdentityUser()
-            //{
-            //    Id = Guid.NewGuid().ToString(),
-            //    UserName = "test",
-            //    NormalizedUserName = "TEST",
-            //    Email = "test@wsei.edu.pl",
-            //    NormalizedEmail = "TEST@WSEI.EDU.PL",
-            //    EmailConfirmed = true
-            //};
-
-            //PasswordHasher<IdentityUser> passwordHasher = new PasswordHasher<IdentityUser>();
-            //user.PasswordHash = passwordHasher.HashPassword(user, "1234Ab!");
-
-            //modelBuilder.Entity<IdentityUser>()
-            //    .HasData(user);
-
-            //// Tworzenie Roli
-            //var adminRule = new IdentityRole()
-            //{
-            //    Id = "ADMIN_ID",
-            //    Name = "admin",
-            //    NormalizedName = "ADMIN"
-            //};
-
-            //adminRule.ConcurrencyStamp = adminRule.Id;
-
-            //// Nadanie użytkownikowi roli
-            //modelBuilder.Entity<IdentityUserRole<string>>()
-            //    .HasData(
-            //        new IdentityUserRole<string>()
-            //        {
-            //            RoleId = adminRule.Id,
-            //            UserId = user.Id,
-            //        }
-            //    );
-
-            //modelBuilder.Entity<IdentityRole>()
-            //    .HasData(adminRule);
+            
             var adminUser = new IdentityUser()
             {
                 Id = Guid.NewGuid().ToString(),
