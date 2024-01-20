@@ -15,6 +15,7 @@ namespace Data
         public DbSet<ContactEntity> Contacts { get; set; } 
         public DbSet<TravelEntity> Travels { get; set; }
         public DbSet<OrganizationEntity> Organizations { get; set; }
+        public DbSet<TravelAgencyEntity> TravelAgencies { get; set; }
         private string Path { get; set; }  
 
         public AppDbContext() 
@@ -35,44 +36,107 @@ namespace Data
             base.OnModelCreating(modelBuilder);
 
             // Tworzenie użytkownika
-            var user = new IdentityUser()
+            //var user = new IdentityUser()
+            //{
+            //    Id = Guid.NewGuid().ToString(),
+            //    UserName = "test",
+            //    NormalizedUserName = "TEST",
+            //    Email = "test@wsei.edu.pl",
+            //    NormalizedEmail = "TEST@WSEI.EDU.PL",
+            //    EmailConfirmed = true
+            //};
+
+            //PasswordHasher<IdentityUser> passwordHasher = new PasswordHasher<IdentityUser>();
+            //user.PasswordHash = passwordHasher.HashPassword(user, "1234Ab!");
+
+            //modelBuilder.Entity<IdentityUser>()
+            //    .HasData(user);
+
+            //// Tworzenie Roli
+            //var adminRule = new IdentityRole()
+            //{
+            //    Id = "ADMIN_ID",
+            //    Name = "admin",
+            //    NormalizedName = "ADMIN"
+            //};
+
+            //adminRule.ConcurrencyStamp = adminRule.Id;
+
+            //// Nadanie użytkownikowi roli
+            //modelBuilder.Entity<IdentityUserRole<string>>()
+            //    .HasData(
+            //        new IdentityUserRole<string>()
+            //        {
+            //            RoleId = adminRule.Id,
+            //            UserId = user.Id,
+            //        }
+            //    );
+
+            //modelBuilder.Entity<IdentityRole>()
+            //    .HasData(adminRule);
+            var adminUser = new IdentityUser()
             {
                 Id = Guid.NewGuid().ToString(),
-                UserName = "test",
-                NormalizedUserName = "TEST",
-                Email = "test@wsei.edu.pl",
-                NormalizedEmail = "TEST@WSEI.EDU.PL",
+                UserName = "admin",
+                NormalizedUserName = "ADMIN",
+                Email = "admin@wsei.edu.pl",
+                NormalizedEmail = "ADMIN@WSEI.EDU.PL",
                 EmailConfirmed = true
             };
 
             PasswordHasher<IdentityUser> passwordHasher = new PasswordHasher<IdentityUser>();
-            user.PasswordHash = passwordHasher.HashPassword(user, "1234Ab!");
+            adminUser.PasswordHash = passwordHasher.HashPassword(adminUser, "Admin1234!");
+
+            var regularUser = new IdentityUser()
+            {
+                Id = Guid.NewGuid().ToString(),
+                UserName = "client",
+                NormalizedUserName = "CLIENT",
+                Email = "client@wsei.edu.pl",
+                NormalizedEmail = "CLIENT@WSEI.EDU.PL",
+                EmailConfirmed = true
+            };
+            regularUser.PasswordHash = passwordHasher.HashPassword(regularUser, "User1234!");
 
             modelBuilder.Entity<IdentityUser>()
-                .HasData(user);
+                .HasData(adminUser, regularUser);
 
             // Tworzenie Roli
-            var adminRule = new IdentityRole()
+            var adminRole = new IdentityRole()
             {
                 Id = "ADMIN_ID",
                 Name = "admin",
-                NormalizedName = "ADMIN"
+                NormalizedName = "ADMIN",
+                ConcurrencyStamp = "1"
+            };
+            var clientRole = new IdentityRole()
+            {
+                Id = "CLIENT_ID",
+                Name = "client",
+                NormalizedName = "CLIENT",
+                ConcurrencyStamp = "2"
             };
 
-            adminRule.ConcurrencyStamp = adminRule.Id;
+            adminRole.ConcurrencyStamp = adminRole.Id;
+            clientRole.ConcurrencyStamp = clientRole.Id;
 
             // Nadanie użytkownikowi roli
             modelBuilder.Entity<IdentityUserRole<string>>()
                 .HasData(
                     new IdentityUserRole<string>()
                     {
-                        RoleId = adminRule.Id,
-                        UserId = user.Id,
-                    }
+                        RoleId = adminRole.Id,
+                        UserId = adminUser.Id,
+                    },
+                     new IdentityUserRole<string>()
+                     {
+                         RoleId = clientRole.Id,
+                         UserId = regularUser.Id,
+                     }
                 );
 
             modelBuilder.Entity<IdentityRole>()
-                .HasData(adminRule);
+                .HasData(adminRole, clientRole);
 
             modelBuilder.Entity<ContactEntity>()
                 .HasOne(e => e.Organization)
@@ -142,28 +206,67 @@ namespace Data
                 new TravelEntity()
                 {
                     Id = 1,
-                    Name = "ItalyWorld",
+                    Name = "Italy",
                     StartDate = new DateTime(2024, 1, 1),
                     EndDate = new DateTime(2024, 2, 2),
                     StartPlace = "Kraków",
                     EndPlace = "Rzym",
                     NumbParticipants = 120,
-                    Guide = "Kowalski"
+                    Guide = "Kowalski",
+                    TravelAgencyId = 101
                 });
             modelBuilder.Entity<TravelEntity>()
                 .HasData(
                 new TravelEntity()
                 {
                     Id = 2,
-                    Name = "POLAND",
+                    Name = "Spain",
                     StartDate = new DateTime(2023, 12, 1),
                     EndDate = new DateTime(2024, 1, 1),
                     StartPlace = "Warszawa",
-                    EndPlace = "Katowice",
+                    EndPlace = "Madryt",
                     NumbParticipants = 12,
-                    Guide = "Nowak"
+                    Guide = "Nowak",
+                    TravelAgencyId = 102
                 }
                );
+            modelBuilder.Entity<TravelEntity>()
+                .HasOne(e => e.TravelAgency)
+                .WithMany(o => o.Travels)
+                .HasForeignKey(e => e.TravelAgencyId);
+
+            modelBuilder.Entity<TravelAgencyEntity>()
+                .HasData(
+                new TravelAgencyEntity()
+                {
+                    Id = 101,
+                    Name = "Itaka",
+                    Description = "Wycieczka po Włoszech"
+                },
+                new TravelAgencyEntity()
+                {
+                    Id = 102,
+                    Name = "Skandiv",
+                    Description = "Wycieczka po krajach Skandynawskich"
+                }
+                );
+
+            modelBuilder.Entity<TravelAgencyEntity>()
+                .OwnsOne(o => o.Agency)
+                .HasData(
+                new
+                {
+                    TravelAgencyEntityId = 101,
+                    Name = "Itaka Agencies",
+                    City = "Kraków",
+                },
+                new
+                {
+                    TravelAgencyEntityId = 102,
+                    Name = "Skandiv World",
+                    City = "Oslo"
+                }
+                );
         }
     }
 }

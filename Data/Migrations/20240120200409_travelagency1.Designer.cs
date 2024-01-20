@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240119195633_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240120200409_travelagency1")]
+    partial class travelagency1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,6 +111,39 @@ namespace Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("Data.Entities.TravelAgencyEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("travelagencies");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 101,
+                            Description = "Wycieczka po Włoszech",
+                            Name = "Itaka"
+                        },
+                        new
+                        {
+                            Id = 102,
+                            Description = "Wycieczka po krajach Skandynawskich",
+                            Name = "Skandiv"
+                        });
+                });
+
             modelBuilder.Entity("Data.Entities.TravelEntity", b =>
                 {
                     b.Property<int>("Id")
@@ -147,7 +180,12 @@ namespace Data.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("TravelAgencyId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("TravelAgencyId");
 
                     b.ToTable("travels");
 
@@ -158,21 +196,23 @@ namespace Data.Migrations
                             EndDate = new DateTime(2024, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             EndPlace = "Rzym",
                             Guide = "Kowalski",
-                            Name = "ItalyWorld",
+                            Name = "Italy",
                             NumbParticipants = 120,
                             StartDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StartPlace = "Kraków"
+                            StartPlace = "Kraków",
+                            TravelAgencyId = 101
                         },
                         new
                         {
                             Id = 2,
                             EndDate = new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            EndPlace = "Katowice",
+                            EndPlace = "Madryt",
                             Guide = "Nowak",
-                            Name = "POLAND",
+                            Name = "Spain",
                             NumbParticipants = 12,
                             StartDate = new DateTime(2023, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            StartPlace = "Warszawa"
+                            StartPlace = "Warszawa",
+                            TravelAgencyId = 102
                         });
                 });
 
@@ -208,6 +248,13 @@ namespace Data.Migrations
                             ConcurrencyStamp = "ADMIN_ID",
                             Name = "admin",
                             NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "CLIENT_ID",
+                            ConcurrencyStamp = "CLIENT_ID",
+                            Name = "client",
+                            NormalizedName = "CLIENT"
                         });
                 });
 
@@ -300,19 +347,35 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "8a047160-a865-44af-a09b-d2d2bd37b28e",
+                            Id = "10de9479-2430-4875-92de-ac9e846d72ff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "ef8ea496-35ba-4632-9a12-4c20f16cf644",
-                            Email = "test@wsei.edu.pl",
+                            ConcurrencyStamp = "d8a79bf4-a4e8-4638-84f3-d6333d610bc4",
+                            Email = "admin@wsei.edu.pl",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
-                            NormalizedEmail = "TEST@WSEI.EDU.PL",
-                            NormalizedUserName = "TEST",
-                            PasswordHash = "AQAAAAEAACcQAAAAEGvhygwU4F4FuUIjdkYRLadgNvg7MI5egHubwKAS+cbfNCAvOmsmTMzknDkcKmiMhw==",
+                            NormalizedEmail = "ADMIN@WSEI.EDU.PL",
+                            NormalizedUserName = "ADMIN",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKghH3Jq20NWcCsx75l5A01pHaZGDMTnKzbu/WD35iHtcaKKUHOGkSg7r6yzMSUaTQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5d087806-aabb-4ebe-aab1-ef795efdcbd6",
+                            SecurityStamp = "dcae15a4-2138-414e-9401-0d770b13213f",
                             TwoFactorEnabled = false,
-                            UserName = "test"
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            Id = "e5e062d0-41e2-44bf-ae90-c555b45bb4f2",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2d6d8f48-0a0c-4aff-9336-eaac0d727305",
+                            Email = "client@wsei.edu.pl",
+                            EmailConfirmed = true,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "CLIENT@WSEI.EDU.PL",
+                            NormalizedUserName = "CLIENT",
+                            PasswordHash = "AQAAAAEAACcQAAAAEE3TgGBBqgcpFGCkGsTArwEXtKJkklpUDEsyDyb/f44JBAgStHmk0noVkCpip+2JHA==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "9765d80e-d4bb-4ca5-bccb-1798e6494496",
+                            TwoFactorEnabled = false,
+                            UserName = "client"
                         });
                 });
 
@@ -378,8 +441,13 @@ namespace Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "8a047160-a865-44af-a09b-d2d2bd37b28e",
+                            UserId = "10de9479-2430-4875-92de-ac9e846d72ff",
                             RoleId = "ADMIN_ID"
+                        },
+                        new
+                        {
+                            UserId = "e5e062d0-41e2-44bf-ae90-c555b45bb4f2",
+                            RoleId = "CLIENT_ID"
                         });
                 });
 
@@ -458,6 +526,56 @@ namespace Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Data.Entities.TravelAgencyEntity", b =>
+                {
+                    b.OwnsOne("Data.Models.Agency", "Agency", b1 =>
+                        {
+                            b1.Property<int>("TravelAgencyEntityId")
+                                .HasColumnType("INTEGER");
+
+                            b1.Property<string>("City")
+                                .IsRequired()
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("Name")
+                                .IsRequired()
+                                .HasColumnType("TEXT");
+
+                            b1.HasKey("TravelAgencyEntityId");
+
+                            b1.ToTable("travelagencies");
+
+                            b1.WithOwner()
+                                .HasForeignKey("TravelAgencyEntityId");
+
+                            b1.HasData(
+                                new
+                                {
+                                    TravelAgencyEntityId = 101,
+                                    City = "Kraków",
+                                    Name = "Itaka Agencies"
+                                },
+                                new
+                                {
+                                    TravelAgencyEntityId = 102,
+                                    City = "Oslo",
+                                    Name = "Skandiv World"
+                                });
+                        });
+
+                    b.Navigation("Agency")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Data.Entities.TravelEntity", b =>
+                {
+                    b.HasOne("Data.Entities.TravelAgencyEntity", "TravelAgency")
+                        .WithMany("Travels")
+                        .HasForeignKey("TravelAgencyId");
+
+                    b.Navigation("TravelAgency");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -512,6 +630,11 @@ namespace Data.Migrations
             modelBuilder.Entity("Data.Entities.OrganizationEntity", b =>
                 {
                     b.Navigation("Contacts");
+                });
+
+            modelBuilder.Entity("Data.Entities.TravelAgencyEntity", b =>
+                {
+                    b.Navigation("Travels");
                 });
 #pragma warning restore 612, 618
         }

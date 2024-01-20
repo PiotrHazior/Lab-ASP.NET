@@ -21,14 +21,7 @@ namespace Laboratorium_3___App.Controllers
         [AllowAnonymous]
         public IActionResult Index()
         {
-            /*
             var contacts = _contactService.FindAll();
-            // Zamień listę na słownik, jeśli to jest wymagane przez Twój widok
-            var contactDictionary = contacts.ToDictionary(c => c.Id);
-            //return View(contactDictionary);
-            return View(contactDictionary.Values.ToList());*/
-            var contacts = _contactService.FindAll();
-            // Zamień listę na słownik, jeśli to jest wymagane przez Twój widok
             var contactDictionary = contacts.ToDictionary(c => c.Id);
             return View(contactDictionary);
 
@@ -54,6 +47,7 @@ namespace Laboratorium_3___App.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "client,admin")]
         public IActionResult Create()
         {
             List<SelectListItem> organizations = _contactService.FindAllOrganization()
@@ -66,6 +60,7 @@ namespace Laboratorium_3___App.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "client,admin")]
         public IActionResult Create(Contact model)
         {
             if (ModelState.IsValid)
@@ -78,20 +73,14 @@ namespace Laboratorium_3___App.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "client,admin")]
         public IActionResult CreateApi()
         {
             return View();
-            /*
-            List<SelectListItem> organizations = _contactService.FindAllOrganization()
-                .Select(e => new SelectListItem()
-                {
-                    Text = e.Name,
-                    Value = e.Id.ToString()
-                }).ToList();
-            return View(new Contact() { OrganizationsList = organizations });*/
         }
 
         [HttpPost]
+        [Authorize(Roles = "client,admin")]
         public IActionResult CreateApi(Contact model)
         {
             if (ModelState.IsValid)
@@ -103,11 +92,13 @@ namespace Laboratorium_3___App.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public IActionResult Update(int id)
         {
             return View(_contactService.FindByID(id));
         }
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Update(Contact model)
         {
             if (ModelState.IsValid)
@@ -118,17 +109,20 @@ namespace Laboratorium_3___App.Controllers
             return View();
         }
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(int id)
         {
             return View(_contactService.FindByID(id));
         }
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult Delete(Contact model)
         {
             _contactService.RemoveByID(model.Id);
             return RedirectToAction("Index");
         }
         [HttpGet]
+        [Authorize(Roles = "admin")]
         public IActionResult Details(int id)
         {
             return View(_contactService.FindByID(id));

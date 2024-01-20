@@ -30,5 +30,8 @@ namespace Data.Entities
         [Required]
         [StringLength(50)]
         public string Guide { get; set; }
+        public TravelAgencyEntity? TravelAgency { get; set; }
+        public int? TravelAgencyId { get; set; }
+        
     }
 }

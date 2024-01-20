@@ -5,27 +5,32 @@ namespace Laboratorium_3___App.Models
 {
     public class EFTravelService : ITravelService
     {
-        private readonly AppDbContext _context;
+        private readonly AppDbContext _travel;
 
         public EFTravelService(AppDbContext context)
         {
-            _context = context;
+            _travel = context;
         }
 
         public void add(Travel travel)
         {
-            _context.Travels.Add(TravelMapper.ToEntity(travel));
-            _context.SaveChanges();
+            _travel.Travels.Add(TravelMapper.ToEntity(travel));
+            _travel.SaveChanges();
         }
 
         public List<Travel> FindAll()
         {
-            return _context.Travels.Select(e => TravelMapper.FromEntity(e)).ToList();
+            return _travel.Travels.Select(e => TravelMapper.FromEntity(e)).ToList();
+        }
+
+        public List<TravelAgencyEntity> FindAllTravelAgency()
+        {
+            return _travel.TravelAgencies.ToList();
         }
 
         public Travel? FindByID(int id)
         {
-            var find = _context.Travels.Find(id);
+            var find = _travel.Travels.Find(id);
             return find is not null ? TravelMapper.FromEntity(find) : null;
         }
 
@@ -33,7 +38,7 @@ namespace Laboratorium_3___App.Models
         {
             return PagingList<Travel>.Create(
                 (p, s) =>
-                    _context.Travels
+                    _travel.Travels
                     .OrderBy(c => c.Name)
                     .Skip((p - 1) * s)
                     .Take(s)
@@ -42,17 +47,17 @@ namespace Laboratorium_3___App.Models
                 ,
                 page,
                 size,
-                _context.Travels.Count()
+                _travel.Travels.Count()
                 );
         }
 
         public void RemoveByID(int id)
         {
-            var find = _context.Travels.Find(id);
+            var find = _travel.Travels.Find(id);
             if (find is not null)
             {
-                _context.Travels.Remove(find);
-                _context.SaveChanges();
+                _travel.Travels.Remove(find);
+                _travel.SaveChanges();
             }
 
         }
@@ -60,8 +65,8 @@ namespace Laboratorium_3___App.Models
         public void Update(Travel travel)
         {
             var entity = TravelMapper.ToEntity(travel);
-            _context.Travels.Update(entity);
-            _context.SaveChanges();
+            _travel.Travels.Update(entity);
+            _travel.SaveChanges();
         }
     }
 }

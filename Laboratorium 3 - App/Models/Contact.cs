@@ -6,27 +6,6 @@ using System.Reflection;
 
 namespace Laboratorium_3___App.Models
 {
-    /*
-    static public class EnumExtension
-    {
-        static public string GetDisplayName(this Enum e)
-        {
-            return
-                e.GetType()
-                .GetMember(e.ToString())
-                .First()
-                .GetCustomAttribute<DisplayAttribute>().GetName();
-        }
-    }
-    public enum Priority
-    {
-        [Display(Name = "niski")]
-        Low,
-        [Display(Name = "normalny")]
-        Normal,
-        [Display(Name = "pilny")]
-        Urgent
-    }*/
     public class Contact
     {
         
@@ -50,14 +29,10 @@ namespace Laboratorium_3___App.Models
         [Display(Name = "Data Urodzin")]
         [DataType(DataType.Date)]
         public DateTime? Birth { get; set; }
-        /*[Display(Name = "Priorytet")]
-        public Priority Priority { get; set; }*/
-
         public int? OrganizationId { get; set; }
         [ValidateNever]
         public List<SelectListItem> OrganizationsList { get; set; }
         
-
         [HiddenInput]
         public DateTime Created { get; set; }
     }

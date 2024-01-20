@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class travelagency1 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -70,22 +70,19 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "travels",
+                name: "travelagencies",
                 columns: table => new
                 {
-                    travel_id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    StartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    EndDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    StartPlace = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    EndPlace = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    NumbParticipants = table.Column<int>(type: "INTEGER", nullable: false),
-                    Guide = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false)
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Description = table.Column<string>(type: "TEXT", nullable: false),
+                    Agency_Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Agency_City = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_travels", x => x.travel_id);
+                    table.PrimaryKey("PK_travelagencies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,15 +213,48 @@ namespace Data.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "travels",
+                columns: table => new
+                {
+                    travel_id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    StartDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    EndDate = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    StartPlace = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    EndPlace = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    NumbParticipants = table.Column<int>(type: "INTEGER", nullable: false),
+                    Guide = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    TravelAgencyId = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_travels", x => x.travel_id);
+                    table.ForeignKey(
+                        name: "FK_travels_travelagencies_TravelAgencyId",
+                        column: x => x.TravelAgencyId,
+                        principalTable: "travelagencies",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
-                values: new object[] { "ADMIN_ID", "ADMIN_ID", "admin", "ADMIN" });
+                values: new object[,]
+                {
+                    { "ADMIN_ID", "ADMIN_ID", "admin", "ADMIN" },
+                    { "CLIENT_ID", "CLIENT_ID", "client", "CLIENT" }
+                });
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "8a047160-a865-44af-a09b-d2d2bd37b28e", 0, "ef8ea496-35ba-4632-9a12-4c20f16cf644", "test@wsei.edu.pl", true, false, null, "TEST@WSEI.EDU.PL", "TEST", "AQAAAAEAACcQAAAAEGvhygwU4F4FuUIjdkYRLadgNvg7MI5egHubwKAS+cbfNCAvOmsmTMzknDkcKmiMhw==", null, false, "5d087806-aabb-4ebe-aab1-ef795efdcbd6", false, "test" });
+                values: new object[,]
+                {
+                    { "10de9479-2430-4875-92de-ac9e846d72ff", 0, "d8a79bf4-a4e8-4638-84f3-d6333d610bc4", "admin@wsei.edu.pl", true, false, null, "ADMIN@WSEI.EDU.PL", "ADMIN", "AQAAAAEAACcQAAAAEKghH3Jq20NWcCsx75l5A01pHaZGDMTnKzbu/WD35iHtcaKKUHOGkSg7r6yzMSUaTQ==", null, false, "dcae15a4-2138-414e-9401-0d770b13213f", false, "admin" },
+                    { "e5e062d0-41e2-44bf-ae90-c555b45bb4f2", 0, "2d6d8f48-0a0c-4aff-9336-eaac0d727305", "client@wsei.edu.pl", true, false, null, "CLIENT@WSEI.EDU.PL", "CLIENT", "AQAAAAEAACcQAAAAEE3TgGBBqgcpFGCkGsTArwEXtKJkklpUDEsyDyb/f44JBAgStHmk0noVkCpip+2JHA==", null, false, "9765d80e-d4bb-4ca5-bccb-1798e6494496", false, "client" }
+                });
 
             migrationBuilder.InsertData(
                 table: "contacts",
@@ -241,18 +271,22 @@ namespace Data.Migrations
                 });
 
             migrationBuilder.InsertData(
-                table: "travels",
-                columns: new[] { "travel_id", "EndDate", "EndPlace", "Guide", "Name", "NumbParticipants", "StartDate", "StartPlace" },
+                table: "travelagencies",
+                columns: new[] { "Id", "Description", "Name", "Agency_City", "Agency_Name" },
                 values: new object[,]
                 {
-                    { 1, new DateTime(2024, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Rzym", "Kowalski", "ItalyWorld", 120, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Kraków" },
-                    { 2, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Katowice", "Nowak", "POLAND", 12, new DateTime(2023, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Warszawa" }
+                    { 101, "Wycieczka po Włoszech", "Itaka", "Kraków", "Itaka Agencies" },
+                    { 102, "Wycieczka po krajach Skandynawskich", "Skandiv", "Oslo", "Skandiv World" }
                 });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "ADMIN_ID", "8a047160-a865-44af-a09b-d2d2bd37b28e" });
+                values: new object[,]
+                {
+                    { "ADMIN_ID", "10de9479-2430-4875-92de-ac9e846d72ff" },
+                    { "CLIENT_ID", "e5e062d0-41e2-44bf-ae90-c555b45bb4f2" }
+                });
 
             migrationBuilder.InsertData(
                 table: "contacts",
@@ -261,6 +295,15 @@ namespace Data.Migrations
                 {
                     { 1, null, "Piter@wsei.edu.pl", "Piter", 102, "123456" },
                     { 2, null, "Karol@wsei.edu.pl", "Karol", 101, "5325253" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "travels",
+                columns: new[] { "travel_id", "EndDate", "EndPlace", "Guide", "Name", "NumbParticipants", "StartDate", "StartPlace", "TravelAgencyId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2024, 2, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), "Rzym", "Kowalski", "Italy", 120, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Kraków", 101 },
+                    { 2, new DateTime(2024, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Madryt", "Nowak", "Spain", 12, new DateTime(2023, 12, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), "Warszawa", 102 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -304,6 +347,11 @@ namespace Data.Migrations
                 name: "IX_contacts_OrganizationId",
                 table: "contacts",
                 column: "OrganizationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_travels_TravelAgencyId",
+                table: "travels",
+                column: "TravelAgencyId");
         }
 
         /// <inheritdoc />
@@ -338,6 +386,9 @@ namespace Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "organizations");
+
+            migrationBuilder.DropTable(
+                name: "travelagencies");
         }
     }
 }

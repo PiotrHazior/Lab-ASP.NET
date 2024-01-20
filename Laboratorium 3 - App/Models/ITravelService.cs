@@ -9,6 +9,7 @@ namespace Laboratorium_3___App.Models
         void Update(Travel travel);
         List<Travel> FindAll();
         Travel? FindByID(int id);
-        PagingList<Travel> FindPage(int page, int size);
+        List<TravelAgencyEntity> FindAllTravelAgency();
+        //PagingList<Travel> FindPage(int page, int size);
     }
 }

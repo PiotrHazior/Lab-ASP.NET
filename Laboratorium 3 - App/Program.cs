@@ -16,8 +16,10 @@ namespace Laboratorium_3___App
             builder.Services.AddControllersWithViews();
             builder.Services.AddDbContext<AppDbContext>();
 
-                        builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<AppDbContext>();
+            builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            .AddRoles<IdentityRole>()          
+            .AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
             builder.Services.AddTransient<IContactService, EFContactService>();
             builder.Services.AddTransient<ITravelService, EFTravelService>();
 

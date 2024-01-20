@@ -15,7 +15,8 @@ namespace Laboratorium_3___App.Models
                 StartPlace = entity.StartPlace,
                 EndPlace = entity.EndPlace,
                 NumbParticipants = entity.NumbParticipants,
-                Guide = entity.Guide
+                Guide = entity.Guide,
+                TravelAgencyId = entity.TravelAgencyId,
             };
         }
 
@@ -30,7 +31,8 @@ namespace Laboratorium_3___App.Models
                 StartPlace = model.StartPlace,
                 EndPlace = model.EndPlace,
                 NumbParticipants = model.NumbParticipants,
-                Guide = model.Guide
+                Guide = model.Guide,
+                TravelAgencyId = model.TravelAgencyId
             };
         }
     }
